@@ -1,3 +1,5 @@
+// https://leetcode.com/problems/valid-parentheses/submissions/1177531139/
+
 #include <iostream>
 #include <stack>
 
@@ -5,6 +7,12 @@ using namespace std;
 
 class Solution {
 public:
+    /**
+     * Checks if a string contains valid parentheses.
+     * 
+     * @param s The input string to check.
+     * @return True if the string contains valid parentheses, false otherwise.
+     */
     bool isValid(string s) {
         if (s.size()%2 !=0) return false;
         stack<char> stck;
