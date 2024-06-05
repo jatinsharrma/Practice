@@ -46,6 +46,33 @@ class Solution {
     }
 
 
+    // below solution is not complete 
+    // idea is find first zero from right , if encounter 1 make it 0 
+    // if zero is encountered copy till the left 1
+    
+    string binaryNextNumber(string s)
+    {
+    	string temp = "";
+	int n = s.size();
+	int i;
+	for( i=n-1 ; i>=0 ; i--)
+	{
+		if( s[i] == '0')
+		{
+			temp += '1';
+			break;
+		}
+		temp += '0';
+	}
+	for(;i>0;i--)
+	{
+		if(s[i] == '0')
+			break;
+		temp += s[i];
+	}
+	reverse(temp.begin(),temp.end());
+	return temp;
+    }
 };
 
 
