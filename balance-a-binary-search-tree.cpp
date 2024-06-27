@@ -1,7 +1,7 @@
 /**
 * @author Jatin Sharma
-* @date 26 June 2024
-* @problem https://leetcode.com/problems/binary-search-tree-to-greater-sum-tree/solutions/5369158/0ms-c-recursion-no-extra-functions/
+* @date 26-June-2024
+* @problem https://leetcode.com/problems/balance-a-binary-search-tree/?envType=daily-question&envId=2024-06-26
 */
 
 #include <iostream>
@@ -10,31 +10,28 @@
 
 using namespace std;
 
-
-//Definition for a binary tree node.
-
+/**
+ * @brief Definition for a binary tree node.
+ * 
+ * This struct represents a node in a binary tree. Each node has an integer value and pointers to its left and right child nodes.
+ */
+struct TreeNode {
+    int val = 0; /**< The value stored in the node. */
+    TreeNode *left = nullptr; /**< Pointer to the left child node. */
+    TreeNode *right = nullptr; /**< Pointer to the right child node. */
+};
 struct TreeNode {
      int val = 0;
      TreeNode *left = nullptr;
      TreeNode *right = nullptr;
- };
-
-class Solution {
-private:
-    int sum = 0;
-public:
-    TreeNode* bstToGst(TreeNode* root) {
-        if(root->right != nullptr) bstToGst(root->right);
-        root->val += sum;
-        sum = root->val;
-        if(root->left != nullptr) bstToGst(root->left);
-        return root;
-    }
 };
 
 /**
  * @class BST
- * @brief Represents a Binary Search Tree (BST) data structure.
+ * @brief Represents a Binary Search Tree (BST).
+ * 
+ * The BST class provides functionality to create and print a binary search tree.
+ * It supports operations like creating a BST from an array and printing the BST in breadth-first order.
  */
 class BST{
 private:
@@ -118,14 +115,65 @@ public:
     }
 };
 
+
+/**
+ * @class Solution
+ * @brief Class that provides a solution for balancing a binary search tree.
+ */
+class Solution {
+private:
+    /**
+     * @brief Helper function to traverse the binary search tree in-order and store the values in a vector.
+     * @param root The root of the binary search tree.
+     * @param sorted A reference to the vector to store the sorted values.
+     */
+    void traverse(TreeNode* root, vector<int> &sorted)
+    {
+        if(root == nullptr) return;
+        traverse(root->left,sorted);
+        sorted.push_back(root->val);
+        traverse(root->right,sorted);
+    }
+
+    /**
+     * @brief Helper function to construct a balanced binary search tree from a sorted vector of values.
+     * @param sorted The sorted vector of values.
+     * @param l The left index of the subarray.
+     * @param r The right index of the subarray.
+     * @return The root of the constructed binary search tree.
+     */
+    TreeNode* constructBST(vector<int> sorted,int l, int r)
+    {
+        if(r<l) return NULL;
+        TreeNode* root = new TreeNode;
+        int mid = (r+l)/2;
+        root->val = sorted[mid];
+        root->left = constructBST(sorted,l,mid-1);
+        root->right = constructBST(sorted,mid+1,r);
+        return root;
+    }
+
+public:
+    /**
+     * @brief Balances a binary search tree.
+     * @param root The root of the binary search tree to be balanced.
+     * @return The root of the balanced binary search tree.
+     */
+    TreeNode* balanceBST(TreeNode* root) {
+        vector<int> sorted;
+        TreeNode* temp_root = root;
+        traverse(temp_root,sorted);
+        for(int i=0; i<sorted.size();i++) cout << sorted[i] << " "; 
+        return constructBST(sorted,0,sorted.size()-1);;
+    }
+};
 int main()
 {
-    vector<int> arr {4,1,6,0,2,5,7,-1,-1,-1,3,-1,-1,-1,8};
+    vector<int> arr {2,1,3};
     BST bst;
     TreeNode* root = bst.createBST(arr);
-    bst.printBsd(root);
     Solution sol;
-    sol.bstToGst(root);
+    root = sol.balanceBST(root);
     bst.printBsd(root);
     return 0;
 }
